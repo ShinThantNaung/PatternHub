@@ -1,3 +1,3 @@
 export interface ThirdPartyPaymentProcessor {
-  thirdPartyPay(): void;
+  thirdPartyPay(amount: string, sender: string, receiver: string): void;
 }

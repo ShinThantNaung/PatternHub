@@ -1,3 +1,3 @@
 export interface PaymentProcessor {
-  pay(): void;
+  pay(amount: string, sender: string, receiver: string): void;
 }

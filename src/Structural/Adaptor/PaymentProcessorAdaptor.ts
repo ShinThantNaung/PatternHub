@@ -4,7 +4,7 @@ import type { ThirdPartyPaymentProcessor } from "./3rdPartyPaymentProcessors/3rd
 export class PaymentProcessorAdapter implements PaymentProcessor {
   constructor(private readonly thirdPartyPayment: ThirdPartyPaymentProcessor) {}
 
-  pay(): void {
-    this.thirdPartyPayment.thirdPartyPay();
+  pay(amount: string, sender: string, receiver: string): void {
+    this.thirdPartyPayment.thirdPartyPay(amount, sender, receiver);
   }
 }

@@ -16,6 +16,11 @@ export class PaymentConfiguration {
     this.sender = sender;
     this.receiver = receiver;
   }
+  setPaymentDetails(amount: number, sender: string, receiver: string): void {
+    this.amount = amount;
+    this.sender = sender;
+    this.receiver = receiver;
+  }
   clone(): PaymentConfiguration {
     return new PaymentConfiguration(
       this.paymentProcessor,
