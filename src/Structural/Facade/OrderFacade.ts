@@ -42,10 +42,10 @@ export class OrderFacade {
         throw new Error("Unknown payment method");
     }
   }
-  completeOrder(input: PaymentInput) {
+  async completeOrder(input: PaymentInput): Promise<void> {
     const paymentProcessor = this.createProcessor(input.paymentMethod);
     paymentProcessor.pay(input.amount, input.sender, input.receiver);
 
-    this.publisher.update();
+    await this.publisher.update();
   }
 }

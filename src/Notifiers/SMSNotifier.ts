@@ -1,10 +1,10 @@
 import type { Notifier } from "./Notifiers.ts";
 
 export class SMSNotifier implements Notifier {
-  update(): void {
-    this.notify();
+  async update(): Promise<void> {
+    await this.notify();
   }
-  notify(): void {
+  async notify(): Promise<void> {
     console.log("Customer has been notified via SMS");
   }
 }
