@@ -1,5 +1,5 @@
-import type { PaymentProcessor } from "../../Creational/Factory/PaymentProcessors/PaymentProcessor.ts";
-import type { ThirdPartyPaymentProcessor } from "./3rdPartyPaymentProcessors/3rdPartyPaymentProcessor.ts";
+import type { PaymentProcessor } from "../../Payment/PaymentProcessors/PaymentProcessor.ts";
+import type { ThirdPartyPaymentProcessor } from "../../Payment/3rdPartyPaymentProcessors/3rdPartyPaymentProcessor.ts";
 
 export class PaymentProcessorAdapter implements PaymentProcessor {
   constructor(private readonly thirdPartyPayment: ThirdPartyPaymentProcessor) {}

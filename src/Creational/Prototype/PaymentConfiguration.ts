@@ -1,4 +1,4 @@
-import type { PaymentProcessor } from "../Factory/PaymentProcessors/PaymentProcessor.ts";
+import type { PaymentProcessor } from "../../Payment/PaymentProcessors/PaymentProcessor.ts";
 
 export class PaymentConfiguration {
   protected paymentProcessor: PaymentProcessor;

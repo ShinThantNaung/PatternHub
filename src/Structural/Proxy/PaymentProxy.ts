@@ -1,4 +1,4 @@
-import type { PaymentProcessor } from "../../Creational/Factory/PaymentProcessors/PaymentProcessor.ts";
+import type { PaymentProcessor } from "../../Payment/PaymentProcessors/PaymentProcessor.ts";
 
 export class PaymentProxy implements PaymentProcessor {
   private paymentProcessor: PaymentProcessor;

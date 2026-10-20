@@ -1,6 +1,6 @@
-import type { PaymentProcessor } from "../PaymentProcessors/PaymentProcessor.ts";
+import type { PaymentProcessor } from "../../../Payment/PaymentProcessors/PaymentProcessor.ts";
 import type { PaymentProcessorFactory } from "./PaymentProcessorFactory.ts";
-import { Stripe } from "../PaymentProcessors/Stripe.ts";
+import { Stripe } from "../../../Payment/PaymentProcessors/Stripe.ts";
 
 export class StripeFactory implements PaymentProcessorFactory {
   createPaymentProcessor(): PaymentProcessor {

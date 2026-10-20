@@ -1,9 +1,9 @@
 import { PayPalFactory } from "../../Creational/Factory/Factories/PayPalFactory.ts";
 import { StripeFactory } from "../../Creational/Factory/Factories/StripeFactory.ts";
-import type { PaymentProcessor } from "../../Creational/Factory/PaymentProcessors/PaymentProcessor.ts";
-import { AyaPay } from "../Adaptor/3rdPartyPaymentProcessors/AyaPay.ts";
-import { KPay } from "../Adaptor/3rdPartyPaymentProcessors/KPay.ts";
-import { ThirdPartyProcessorFactory } from "../Adaptor/ThirdPartyProcessorFactory.ts";
+import type { PaymentProcessor } from "../../Payment/PaymentProcessors/PaymentProcessor.ts";
+import { AyaPay } from "../../Payment/3rdPartyPaymentProcessors/AyaPay.ts";
+import { KPay } from "../../Payment/3rdPartyPaymentProcessors/KPay.ts";
+import { ThirdPartyProcessorFactory } from "../../Creational/Factory/Factories/ThirdPartyProcessorFactory.ts";
 import { PaymentProxy } from "../Proxy/PaymentProxy.ts";
 
 type PaymentMethod = "stripe" | "paypal" | "kpay" | "ayapay";
@@ -18,24 +18,16 @@ export class OrderFacade {
   private createProcessor(method: PaymentMethod): PaymentProcessor {
     switch (method.toLowerCase()) {
       case "paypal":
-        return new PaymentProxy(
-          new PayPalFactory().createPaymentProcessor(),
-        );
+        return new PaymentProxy(new PayPalFactory().createPaymentProcessor());
       case "stripe":
-        return new PaymentProxy(
-          new StripeFactory().createPaymentProcessor(),
-        );
+        return new PaymentProxy(new StripeFactory().createPaymentProcessor());
       case "kpay":
         return new PaymentProxy(
-          new ThirdPartyProcessorFactory(
-            new KPay(),
-          ).createPaymentProcessor(),
+          new ThirdPartyProcessorFactory(new KPay()).createPaymentProcessor(),
         );
       case "ayapay":
         return new PaymentProxy(
-          new ThirdPartyProcessorFactory(
-            new AyaPay(),
-          ).createPaymentProcessor(),
+          new ThirdPartyProcessorFactory(new AyaPay()).createPaymentProcessor(),
         );
       default:
         throw new Error("Unknown payment method");
