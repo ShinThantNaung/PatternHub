@@ -1,4 +1,3 @@
-import type { promises } from "node:dns";
 import type { Notifier } from "../../Notifiers/Notifiers.ts";
 export class NotificationPublisher {
   private notifiers: Notifier[] = [];
@@ -9,8 +8,8 @@ export class NotificationPublisher {
     this.notifiers = this.notifiers.filter((item) => item !== notifier);
   }
   async update(): Promise<void> {
-    this.notifiers.forEach(async (notifier) => {
-      await notifier.update();
-    });
+    await Promise.all(
+      this.notifiers.map(async (notifier) => notifier.update()),
+    );
   }
 }

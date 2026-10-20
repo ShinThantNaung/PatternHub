@@ -6,9 +6,9 @@ export class PaymentProxy implements PaymentProcessor {
   constructor(paymentProcessor: PaymentProcessor) {
     this.paymentProcessor = paymentProcessor;
   }
-  pay(amount: number, sender: string, receiver: string): void {
+  async pay(amount: number, sender: string, receiver: string): Promise<void> {
     this.validate(amount, sender, receiver);
-    this.paymentProcessor.pay(amount, sender, receiver);
+    await this.paymentProcessor.pay(amount, sender, receiver);
   }
   private validate(amount: number, sender: string, receiver: string): void {
     if (amount <= 0) {

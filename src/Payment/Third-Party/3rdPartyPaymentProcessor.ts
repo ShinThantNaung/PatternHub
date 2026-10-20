@@ -1,3 +1,3 @@
 export interface ThirdPartyPaymentProcessor {
-  thirdPartyPay(amount: number, sender: string, receiver: string): void;
+  thirdPartyPay(amount: number, sender: string, receiver: string): Promise<void>;
 }

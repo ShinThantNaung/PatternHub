@@ -1,7 +1,11 @@
 import type { ThirdPartyPaymentProcessor } from "./3rdPartyPaymentProcessor.ts";
 
 export class KPay implements ThirdPartyPaymentProcessor {
-  thirdPartyPay(amount: number, sender: string, receiver: string): void {
+  async thirdPartyPay(
+    amount: number,
+    sender: string,
+    receiver: string,
+  ): Promise<void> {
     console.log(
       `Processing payment of ${amount}$ from ${sender} to ${receiver} with KPay third party api...`,
     );

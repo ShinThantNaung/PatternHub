@@ -1,7 +1,7 @@
 import type { Notifier } from "../../Notifiers/Notifiers.ts";
 import { appendFile } from "node:fs/promises";
 
-export class LoggerDecorator implements Notifier {
+export class NotificationLoggerDecorator implements Notifier {
   private notifier: Notifier;
   constructor(notifier: Notifier) {
     this.notifier = notifier;
@@ -17,6 +17,6 @@ export class LoggerDecorator implements Notifier {
   }
   async notify(): Promise<void> {
     await this.log();
-    this.notifier.notify();
+    await this.notifier.notify();
   }
 }

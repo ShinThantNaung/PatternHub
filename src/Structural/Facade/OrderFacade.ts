@@ -6,9 +6,10 @@ import { KPay } from "../../Payment/Third-Party/KPay.ts";
 import { ThirdPartyProcessorFactory } from "../../Creational/Factory/Factories/ThirdPartyProcessorFactory.ts";
 import { PaymentProxy } from "../Proxy/PaymentProxy.ts";
 import { NotificationPublisher } from "../../Behavioural/Observer/NotificationPublisher.ts";
-import type { Notifier } from "../../Notifiers/Notifiers.ts";
 import { EmailNotifier } from "../../Notifiers/EmailNotifier.ts";
 import { SMSNotifier } from "../../Notifiers/SMSNotifier.ts";
+import { NotificationLoggerDecorator } from "../Decorator/NotificationLoggerDecorator.ts";
+import { PaymentLoggerDecorator } from "../Decorator/PaymentLoggerDecorator.ts";
 
 type PaymentMethod = "stripe" | "paypal" | "kpay" | "ayapay";
 
@@ -21,30 +22,42 @@ type PaymentInput = {
 export class OrderFacade {
   private publisher = new NotificationPublisher();
   constructor() {
-    this.publisher.addObserver(new EmailNotifier());
-    this.publisher.addObserver(new SMSNotifier());
+    this.publisher.addObserver(
+      new NotificationLoggerDecorator(new EmailNotifier()),
+    );
+    this.publisher.addObserver(
+      new NotificationLoggerDecorator(new SMSNotifier()),
+    );
   }
   private createProcessor(method: PaymentMethod): PaymentProcessor {
+    let paymentProcessor: PaymentProcessor;
+
     switch (method.toLowerCase()) {
       case "paypal":
-        return new PaymentProxy(new PayPalFactory().createPaymentProcessor());
+        paymentProcessor = new PayPalFactory().createPaymentProcessor();
+        break;
       case "stripe":
-        return new PaymentProxy(new StripeFactory().createPaymentProcessor());
+        paymentProcessor = new StripeFactory().createPaymentProcessor();
+        break;
       case "kpay":
-        return new PaymentProxy(
-          new ThirdPartyProcessorFactory(new KPay()).createPaymentProcessor(),
-        );
+        paymentProcessor = new ThirdPartyProcessorFactory(
+          new KPay(),
+        ).createPaymentProcessor();
+        break;
       case "ayapay":
-        return new PaymentProxy(
-          new ThirdPartyProcessorFactory(new AyaPay()).createPaymentProcessor(),
-        );
+        paymentProcessor = new ThirdPartyProcessorFactory(
+          new AyaPay(),
+        ).createPaymentProcessor();
+        break;
       default:
         throw new Error("Unknown payment method");
     }
+
+    return new PaymentProxy(new PaymentLoggerDecorator(paymentProcessor, method));
   }
   async completeOrder(input: PaymentInput): Promise<void> {
     const paymentProcessor = this.createProcessor(input.paymentMethod);
-    paymentProcessor.pay(input.amount, input.sender, input.receiver);
+    await paymentProcessor.pay(input.amount, input.sender, input.receiver);
 
     await this.publisher.update();
   }
