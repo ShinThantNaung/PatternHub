@@ -1,3 +1,5 @@
+import type { PaymentDetails } from "../../Types/PaymentInput.ts";
+
 export interface ThirdPartyPaymentProcessor {
-  thirdPartyPay(amount: number, sender: string, receiver: string): Promise<void>;
+  thirdPartyPay(input: PaymentDetails): Promise<void>;
 }

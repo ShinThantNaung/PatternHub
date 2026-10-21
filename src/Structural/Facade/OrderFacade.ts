@@ -10,14 +10,11 @@ import { EmailNotifier } from "../../Notifiers/EmailNotifier.ts";
 import { SMSNotifier } from "../../Notifiers/SMSNotifier.ts";
 import { NotificationLoggerDecorator } from "../Decorator/NotificationLoggerDecorator.ts";
 import { PaymentLoggerDecorator } from "../Decorator/PaymentLoggerDecorator.ts";
-type PaymentMethod = "stripe" | "paypal" | "kpay" | "ayapay";
+import type {
+  PaymentInput,
+  PaymentMethod,
+} from "../../Types/PaymentInput.ts";
 
-type PaymentInput = {
-  paymentMethod: PaymentMethod;
-  amount: number;
-  sender: string;
-  receiver: string;
-};
 export class OrderFacade {
   private publisher = new NotificationPublisher();
   constructor() {
@@ -57,9 +54,10 @@ export class OrderFacade {
     );
   }
   async completeOrder(input: PaymentInput): Promise<void> {
-    const paymentProcessor = this.createProcessor(input.paymentMethod);
+    const { paymentMethod, ...paymentDetails } = input;
+    const paymentProcessor = this.createProcessor(paymentMethod);
     try {
-      await paymentProcessor.pay(input.amount, input.sender, input.receiver);
+      await paymentProcessor.pay(paymentDetails);
       await this.publisher.update();
     } catch (err) {
       console.error(

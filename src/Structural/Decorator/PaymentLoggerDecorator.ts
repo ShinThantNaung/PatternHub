@@ -1,5 +1,6 @@
 import { appendFile } from "node:fs/promises";
 import type { PaymentProcessor } from "../../Payment/PaymentProcessors/PaymentProcessor.ts";
+import type { PaymentDetails } from "../../Types/PaymentInput.ts";
 type PaymentMethod = "stripe" | "paypal" | "kpay" | "ayapay";
 export class PaymentLoggerDecorator implements PaymentProcessor {
   private readonly paymentProcessor: PaymentProcessor;
@@ -11,26 +12,14 @@ export class PaymentLoggerDecorator implements PaymentProcessor {
     this.paymentProcessor = paymentProcessor;
     this.paymentMethod = paymentMethod;
   }
-  private constructLogData(
-    amount: number,
-    sender: string,
-    receiver: string,
-  ): string {
-    return `${new Date().toISOString()}\nFrom: ${sender}\nTo: ${receiver}\nAmount: ${amount}\nVia: ${this.paymentMethod}\n`;
+  private constructLogData(input: PaymentDetails): string {
+    return `${new Date().toISOString()}\nFrom: ${input.sender}\nTo: ${input.receiver}\nAmount: ${input.amount}\nVia: ${this.paymentMethod}\n`;
   }
-  private async log(
-    amount: number,
-    sender: string,
-    receiver: string,
-  ): Promise<void> {
-    await appendFile(
-      "Logs/payments.log",
-      this.constructLogData(amount, sender, receiver),
-      "utf8",
-    );
+  private async log(input: PaymentDetails): Promise<void> {
+    await appendFile("Logs/payments.log", this.constructLogData(input), "utf8");
   }
-  async pay(amount: number, sender: string, receiver: string): Promise<void> {
-    await this.log(amount, sender, receiver);
-    await this.paymentProcessor.pay(amount, sender, receiver);
+  async pay(input: PaymentDetails): Promise<void> {
+    await this.log(input);
+    await this.paymentProcessor.pay(input);
   }
 }

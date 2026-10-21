@@ -1,9 +1,10 @@
 import type { PaymentProcessor } from "./PaymentProcessor.ts";
+import type { PaymentDetails } from "../../Types/PaymentInput.ts";
 
 export class Stripe implements PaymentProcessor {
-  async pay(amount: number, sender: string, receiver: string): Promise<void> {
+  async pay(input: PaymentDetails): Promise<void> {
     console.log(
-      `Processing payment of ${amount}$ from ${sender} to ${receiver} using Stripe...`,
+      `Processing payment of ${input.amount}$ from ${input.sender} to ${input.receiver} using Stripe...`,
     );
   }
 }

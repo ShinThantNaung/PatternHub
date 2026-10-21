@@ -1,32 +1,19 @@
 import type { PaymentProcessor } from "../../Payment/PaymentProcessors/PaymentProcessor.ts";
+import type { PaymentInput } from "../../Types/PaymentInput.ts";
 
 export class PaymentConfiguration {
   protected paymentProcessor: PaymentProcessor;
-  protected amount: number;
-  protected sender: string;
-  protected receiver: string;
-  constructor(
-    paymentProcessor: PaymentProcessor,
-    amount: number,
-    sender: string,
-    receiver: string,
-  ) {
+  protected paymentInput: PaymentInput;
+  constructor(paymentProcessor: PaymentProcessor, paymentInput: PaymentInput) {
     this.paymentProcessor = paymentProcessor;
-    this.amount = amount;
-    this.sender = sender;
-    this.receiver = receiver;
+    this.paymentInput = paymentInput;
   }
-  setPaymentDetails(amount: number, sender: string, receiver: string): void {
-    this.amount = amount;
-    this.sender = sender;
-    this.receiver = receiver;
+  setPaymentDetails(paymentInput: PaymentInput): void {
+    this.paymentInput = paymentInput;
   }
   clone(): PaymentConfiguration {
-    return new PaymentConfiguration(
-      this.paymentProcessor,
-      this.amount,
-      this.sender,
-      this.receiver,
-    );
+    return new PaymentConfiguration(this.paymentProcessor, {
+      ...this.paymentInput,
+    });
   }
 }
