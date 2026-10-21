@@ -1,7 +1,7 @@
 import { appendFile } from "node:fs/promises";
 import type { PaymentProcessor } from "../../Payment/PaymentProcessors/PaymentProcessor.ts";
 import type { PaymentDetails } from "../../Types/PaymentInput.ts";
-type PaymentMethod = "stripe" | "paypal" | "kpay" | "ayapay";
+import type { PaymentMethod } from "../../Types/PaymentInput.ts";
 export class PaymentLoggerDecorator implements PaymentProcessor {
   private readonly paymentProcessor: PaymentProcessor;
   private readonly paymentMethod: PaymentMethod;
