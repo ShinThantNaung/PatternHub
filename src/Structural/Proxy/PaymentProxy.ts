@@ -11,8 +11,10 @@ export class PaymentProxy implements PaymentProcessor {
     await this.paymentProcessor.pay(amount, sender, receiver);
   }
   private validate(amount: number, sender: string, receiver: string): void {
-    if (amount <= 0) {
-      throw new Error("Payment amount cannot be negative");
+    if (amount <= 0 || !Number.isFinite(amount)) {
+      throw new Error(
+        "Payment amount must be a finite value greater than zero",
+      );
     }
     if (sender.trim() === "" || receiver.trim() === "") {
       throw new Error("Sender or Receiver name cannot be empty");

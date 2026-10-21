@@ -7,7 +7,7 @@ export class NotificationLoggerDecorator implements Notifier {
     this.notifier = notifier;
   }
   private constructLogData(): string {
-    return `Notification sent at ${new Date().toISOString()}`;
+    return `Notification sent at ${new Date().toISOString()}\n`;
   }
   private async log(): Promise<void> {
     await appendFile("Logs/notifications.log", this.constructLogData(), "utf8");

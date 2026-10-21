@@ -10,7 +10,6 @@ import { EmailNotifier } from "../../Notifiers/EmailNotifier.ts";
 import { SMSNotifier } from "../../Notifiers/SMSNotifier.ts";
 import { NotificationLoggerDecorator } from "../Decorator/NotificationLoggerDecorator.ts";
 import { PaymentLoggerDecorator } from "../Decorator/PaymentLoggerDecorator.ts";
-
 type PaymentMethod = "stripe" | "paypal" | "kpay" | "ayapay";
 
 type PaymentInput = {
@@ -53,12 +52,19 @@ export class OrderFacade {
         throw new Error("Unknown payment method");
     }
 
-    return new PaymentProxy(new PaymentLoggerDecorator(paymentProcessor, method));
+    return new PaymentProxy(
+      new PaymentLoggerDecorator(paymentProcessor, method),
+    );
   }
   async completeOrder(input: PaymentInput): Promise<void> {
     const paymentProcessor = this.createProcessor(input.paymentMethod);
-    await paymentProcessor.pay(input.amount, input.sender, input.receiver);
-
-    await this.publisher.update();
+    try {
+      await paymentProcessor.pay(input.amount, input.sender, input.receiver);
+      await this.publisher.update();
+    } catch (err) {
+      console.error(
+        `An unexpect error occurred: ${err instanceof Error ? err.message : "Unknown Cause!"}`,
+      );
+    }
   }
 }
